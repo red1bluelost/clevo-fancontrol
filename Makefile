@@ -1,20 +1,19 @@
 vpath %.c ../src
 
-CC = gcc
-CFLAGS = -c -Wall -std=gnu99
+CPP = g++
+CPPFLAGS = -c -Wall -Wextra -Wpedantic -Wconversion -Wshadow -std=c++20
 LDFLAGS =
 
 DSTDIR := /usr/local
 OBJDIR := obj
 SRCDIR := src
 
-SRC = clevo-fancontrol.c
-OBJ = $(patsubst %.c,$(OBJDIR)/%.o,$(SRC)) 
+SRC = clevo_fan_control.cpp
+OBJ = $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRC))
 
-TARGET = bin/clevo-fancontrol
+TARGET = bin/clevo_fan_control
 
-
-all: $(TARGET)
+all: $(TARGET) $(TARGETCPP)
 
 install: $(TARGET)
 	@echo Install to ${DSTDIR}/bin/
@@ -28,15 +27,15 @@ test: $(TARGET)
 $(TARGET): $(OBJ) Makefile
 	@mkdir -p bin
 	@echo linking $(TARGET) from $(OBJ)
-	@$(CC) $(OBJ) -o $(TARGET) $(LDFLAGS) -lm
+	@$(CPP) $(OBJ) -o $(TARGET) $(LDFLAGS) -lm
 
 clean:
 	rm $(OBJ) $(TARGET)
 
-$(OBJDIR)/%.o : $(SRCDIR)/%.c Makefile
-	@echo compiling $< 
+$(OBJDIR)/%.o : $(SRCDIR)/%.cpp Makefile
+	@echo compiling $<
 	@mkdir -p obj
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CPP) $(CPPFLAGS) -c $< -o $@
 
 #$(OBJECTS): | obj
 
