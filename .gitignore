@@ -4,3 +4,4 @@ src-py/.idea
 *.token
 .pyc
 __pycache__
+.idea/
