@@ -42,6 +42,7 @@ constexpr size_t ec_reg_fan_rpms_hi = 0xD0;
 constexpr size_t ec_reg_fan_rpms_lo = 0xD1;
 
 constexpr uint8_t ibf = 0x01;
+constexpr uint8_t obf = 0x00;
 } // namespace k
 
 volatile bool global_running_flag = true;
@@ -95,17 +96,17 @@ uint8_t ec_io_read(const uint8_t port) {
   ec_io_wait(k::ec_sc, k::ibf, 0);
   outb(port, k::ec_data);
 
-  ec_io_wait(k::ec_sc, k::ibf, 1);
+  ec_io_wait(k::ec_sc, k::obf, 1);
   return inb(k::ec_data);
 }
 
 int32_t calculate_fan_duty(int32_t raw_duty) {
-  return static_cast<int>(static_cast<double>(raw_duty) / 255.0 * 100.0);
+  return static_cast<int32_t>(static_cast<double>(raw_duty) / 255.0 * 100.0);
 }
 
 int32_t calculate_fan_rpms(int32_t raw_rpm_high, int32_t raw_rpm_low) {
   int32_t raw_rpm = (raw_rpm_high << 8) + raw_rpm_low;
-  return (2156220 / raw_rpm);
+  return raw_rpm > 0 ? (2156220 / raw_rpm) : 0;
 }
 
 int32_t ec_query_cpu_temp() { return ec_io_read(k::ec_reg_cpu_temp); }
