@@ -1,7 +1,7 @@
 vpath %.c ../src
 
 CPP = g++
-CPPFLAGS = -c -Wall -Wextra -Wpedantic -Wconversion -Wshadow -std=c++20
+CPPFLAGS = -c -Wall -Wextra -Wpedantic -Wconversion -Wshadow -std=c++20 -O3
 LDFLAGS =
 
 DSTDIR := /usr/local
@@ -27,7 +27,7 @@ test: $(TARGET)
 $(TARGET): $(OBJ) Makefile
 	@mkdir -p bin
 	@echo linking $(TARGET) from $(OBJ)
-	@$(CPP) $(OBJ) -o $(TARGET) $(LDFLAGS) -lm
+	@$(CPP) $(OBJ) -o $(TARGET) $(LDFLAGS) -lm -lfmt
 
 clean:
 	rm $(OBJ) $(TARGET)
